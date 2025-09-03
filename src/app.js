@@ -15,7 +15,7 @@ app.use(logger);
 
 // Enable CORS for frontend
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000", // for Render deployment, use env
+  origin: process.env.FRONTEND_URL || "http://localhost:5173", // for Render deployment, use env
   credentials: true,
 }));
 
