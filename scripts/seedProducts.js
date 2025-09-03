@@ -17,7 +17,7 @@ const seedProducts = async () => {
         description:
           "Your perfect pack for everyday use and walks in the forest.",
         category: "men's clothing",
-        image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
+        image: "https://plus.unsplash.com/premium_photo-1722993519879-aadaa597ba3f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8RmphbGxyYXZlbiUyMCUyMCUyMEZvbGRzYWNrJTIwTm8uJTIwMSUyMEJhY2twYWNrfGVufDB8fDB8fHww",
       },
       {
         title: "Mens Casual Premium Slim Fit T-Shirts",
@@ -25,14 +25,14 @@ const seedProducts = async () => {
         description:
           "Slim-fitting style, contrast raglan long sleeve, three-button henley placket.",
         category: "men's clothing",
-        image: "https://fakestoreapi.com/img/71-3HjGNDUL._AC_UL1280_.jpg",
+        image: "https://media.istockphoto.com/id/1179588853/photo/full-length-body-size-view-of-his-he-nice-attractive-fit-peaceful-content-guy-wearing-pink.webp?a=1&b=1&s=612x612&w=0&k=20&c=d9CU0oetSBmV-a000S5_oLRGKvjI_Dz9KxWjdhvOA04=",
       },
       {
         title: "Mens Cotton Jacket",
         price: 55.99,
         description: "Great outerwear jackets for Spring/Autumn/Winter.",
         category: "men's clothing",
-        image: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg",
+        image: "https://media.istockphoto.com/id/1209954555/photo/pacific-islander-ethnicity-male-walking-in-front-of-white-background-wearing-warm-clothing.jpg?s=2048x2048&w=is&k=20&c=Kd-_BPSRcRU3pV0_K4Qvo7Y6ZDxoNzJ3C-she19GgaQ=",
       },
       {
         title: "Mens Casual Slim Fit",
@@ -40,7 +40,7 @@ const seedProducts = async () => {
         description:
           "The color could be slightly different between on the screen and in practice.",
         category: "men's clothing",
-        image: "https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg",
+        image: "https://images.unsplash.com/photo-1666358085605-b3b717d5a210?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       },
       {
         title:
