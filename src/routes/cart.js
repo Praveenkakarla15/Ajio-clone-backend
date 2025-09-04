@@ -19,7 +19,7 @@ router.get("/", getCart);
 // Add item to cart
 router.post("/", addToCart);
 
-// Update quantity of a cart item (increase/decrease)
+// Update quantity of a cart item
 router.put("/:id", updateCartQuantity);
 
 // Remove a single product from cart

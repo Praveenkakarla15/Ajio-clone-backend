@@ -1,6 +1,6 @@
 import CartItem from "../models/CartItem.js";
 
-// @desc Get all cart items for the logged-in user
+// @desc Get all cart items for logged-in user
 export const getCart = async (req, res) => {
   try {
     const items = await CartItem.find({ user: req.user._id }).populate("product");
