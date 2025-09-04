@@ -27,8 +27,11 @@ export const addFavorite = async (req, res) => {
     if (!exists) {
       fav.items.push({ product: productId });
       await fav.save();
+      await fav.populate("items.product");
+      return res.status(201).json(fav.items);
     }
 
+    // Already exists → return current list
     await fav.populate("items.product");
     res.status(200).json(fav.items);
   } catch (err) {
