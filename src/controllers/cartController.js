@@ -1,45 +1,80 @@
-// src/controllers/cartController.js
 import CartItem from "../models/CartItem.js";
 
-// Get all cart items for logged-in user
+// @desc Get all cart items for the logged-in user
 export const getCart = async (req, res) => {
   try {
     const items = await CartItem.find({ user: req.user._id }).populate("product");
-    res.json(items);
+    res.status(200).json(items);
   } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+    console.error("Error fetching cart:", err);
+    res.status(500).json({ message: "Failed to fetch cart items" });
   }
 };
 
-// Add item to cart
+// @desc Add item to cart
 export const addToCart = async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
+    const { productId, quantity = 1 } = req.body;
+    if (!productId) return res.status(400).json({ message: "Product ID is required" });
 
     let item = await CartItem.findOne({ user: req.user._id, product: productId });
     if (item) {
-      item.quantity += quantity || 1;
+      item.quantity += quantity;
       await item.save();
       return res.status(200).json(item);
     }
 
-    item = new CartItem({ user: req.user._id, product: productId, quantity: quantity || 1 });
+    item = new CartItem({ user: req.user._id, product: productId, quantity });
     await item.save();
     res.status(201).json(item);
   } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+    console.error("Error adding to cart:", err);
+    res.status(500).json({ message: "Failed to add item to cart" });
   }
 };
 
-// Remove item from cart
+// @desc Update quantity of a cart item
+export const updateCartQuantity = async (req, res) => {
+  try {
+    const { quantity } = req.body;
+    const item = await CartItem.findOne({ _id: req.params.id, user: req.user._id });
+
+    if (!item) return res.status(404).json({ message: "Cart item not found" });
+    if (quantity <= 0) {
+      await item.deleteOne();
+      return res.status(200).json({ message: "Item removed from cart" });
+    }
+
+    item.quantity = quantity;
+    await item.save();
+    res.status(200).json(item);
+  } catch (err) {
+    console.error("Error updating cart quantity:", err);
+    res.status(500).json({ message: "Failed to update cart item" });
+  }
+};
+
+// @desc Remove item from cart
 export const removeFromCart = async (req, res) => {
   try {
     const item = await CartItem.findOne({ _id: req.params.id, user: req.user._id });
     if (!item) return res.status(404).json({ message: "Cart item not found" });
 
     await item.deleteOne();
-    res.json({ message: "Item removed from cart" });
+    res.status(200).json({ message: "Item removed from cart" });
   } catch (err) {
-    res.status(500).json({ message: "Server Error" });
+    console.error("Error removing from cart:", err);
+    res.status(500).json({ message: "Failed to remove item from cart" });
+  }
+};
+
+// @desc Clear all items from cart for logged-in user
+export const clearCart = async (req, res) => {
+  try {
+    await CartItem.deleteMany({ user: req.user._id });
+    res.status(200).json({ message: "All items removed from cart" });
+  } catch (err) {
+    console.error("Error clearing cart:", err);
+    res.status(500).json({ message: "Failed to clear cart" });
   }
 };
