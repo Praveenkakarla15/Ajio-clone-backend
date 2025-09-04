@@ -1,4 +1,3 @@
-// src/routes/products.js
 import express from "express";
 import { getProducts, getProduct } from "../controllers/productsController.js";
 
