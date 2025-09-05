@@ -26,14 +26,11 @@ export const addFavorite = async (req, res) => {
     const exists = fav.items.find((i) => i.product.toString() === productId);
     if (!exists) {
       fav.items.push({ product: productId });
-      await fav.save();
-      await fav.populate("items.product");
-      return res.status(201).json(fav.items);
     }
 
-    // Already exists → return current list
+    await fav.save();
     await fav.populate("items.product");
-    res.status(200).json(fav.items);
+    return res.status(200).json(fav.items);
   } catch (err) {
     console.error("Error adding to favorites:", err);
     res.status(500).json({ message: "Failed to add favorite" });
@@ -43,15 +40,16 @@ export const addFavorite = async (req, res) => {
 // Remove a product from favorites
 export const removeFavorite = async (req, res) => {
   try {
-    const { id } = req.params; // product id
+    const { id } = req.params; // product ID
     const fav = await Favorite.findOne({ user: req.user._id });
     if (!fav) return res.status(404).json({ message: "Favorites not found" });
 
+    // Ensure we compare against product._id
     fav.items = fav.items.filter((i) => i.product.toString() !== id);
     await fav.save();
 
     await fav.populate("items.product");
-    res.status(200).json(fav.items);
+    res.status(200).json(fav.items); // Return updated list
   } catch (err) {
     console.error("Error removing favorite:", err);
     res.status(500).json({ message: "Failed to remove favorite" });
@@ -66,7 +64,7 @@ export const clearFavorites = async (req, res) => {
 
     fav.items = [];
     await fav.save();
-    res.status(200).json({ message: "All favorites removed" });
+    res.status(200).json(fav.items); // Return empty list
   } catch (err) {
     console.error("Error clearing favorites:", err);
     res.status(500).json({ message: "Failed to clear favorites" });
