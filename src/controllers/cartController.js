@@ -46,7 +46,7 @@ export const updateCartQuantity = async (req, res) => {
     const cart = await Cart.findOne({ user: req.user._id });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    const item = cart.items.id(req.params.id); // use subdocument id
+    const item = cart.items.id(req.params.id); // still using subdocument id for update
     if (!item) return res.status(404).json({ message: "Cart item not found" });
 
     if (quantity <= 0) {
@@ -64,16 +64,18 @@ export const updateCartQuantity = async (req, res) => {
   }
 };
 
-// @desc Remove item from cart
+// @desc Remove item from cart using productId instead of subdocument id
 export const removeFromCart = async (req, res) => {
   try {
+    const { id: productId } = req.params; // productId from frontend
     const cart = await Cart.findOne({ user: req.user._id });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    const item = cart.items.id(req.params.id);
-    if (!item) return res.status(404).json({ message: "Cart item not found" });
+    // Filter out item based on productId
+    cart.items = cart.items.filter(
+      (item) => item.product.toString() !== productId
+    );
 
-    item.remove();
     await cart.save();
     await cart.populate("items.product");
     res.status(200).json(cart.items);
