@@ -35,7 +35,7 @@ cd ajio-clone-backend
 # Install dependencies
 npm install
 
-## 📡 API Endpoints
+## API Endpoints
 ## Auth
 POST /api/auth/register → Register a new user
 POST /api/auth/login → Login user
@@ -56,3 +56,6 @@ POST /api/cart → Add item to cart
 PUT /api/cart/:id → Update item quantity
 DELETE /api/cart/:id → Remove item
 DELETE /api/cart → Clear cart
+
+## server will run on
+http://localhost:5000
