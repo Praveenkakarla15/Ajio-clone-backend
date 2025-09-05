@@ -13,10 +13,9 @@ const seedProducts = async () => {
     // Clear existing products
     await Product.deleteMany();
 
-    // Product data
+    // Product data without manual id, MongoDB will generate _id
     const products = [
       {
-        id: "p1",
         title: "Men's Cotton Jacket",
         description: "Lightweight cotton jacket perfect for all seasons.",
         price: 55.99,
@@ -24,7 +23,6 @@ const seedProducts = async () => {
         image: "https://picsum.photos/id/100/300/300",
       },
       {
-        id: "p2",
         title: "Slim Fit T-Shirt",
         description: "Soft breathable slim-fit t-shirt for everyday wear.",
         price: 22.3,
@@ -32,7 +30,6 @@ const seedProducts = async () => {
         image: "https://picsum.photos/id/101/300/300",
       },
       {
-        id: "p3",
         title: "Elegant Women's Handbag",
         description: "Stylish handbag crafted with premium materials.",
         price: 35.5,
@@ -40,7 +37,6 @@ const seedProducts = async () => {
         image: "https://picsum.photos/id/102/300/300",
       },
       {
-        id: "p4",
         title: "Bluetooth Headphones",
         description: "Wireless noise-cancelling headphones with long battery life.",
         price: 89.99,
@@ -48,7 +44,6 @@ const seedProducts = async () => {
         image: "https://picsum.photos/id/103/300/300",
       },
       {
-        id: "p5",
         title: "Stainless Steel Wristwatch",
         description: "Classic water-resistant watch with leather strap.",
         price: 149.99,
@@ -56,7 +51,6 @@ const seedProducts = async () => {
         image: "https://dummyjson.com/image/300x300/000000/FFFFFF?text=Wristwatch",
       },
       {
-        id: "p6",
         title: "Diamond Stud Earrings",
         description: "Premium sparkle diamond stud earrings.",
         price: 199.99,
@@ -64,7 +58,6 @@ const seedProducts = async () => {
         image: "https://dummyjson.com/image/300x300/550000/FFFFFF?text=Earrings",
       },
       {
-        id: "p7",
         title: "Gaming Mechanical Keyboard",
         description: "RGB mechanical keyboard with durable keys.",
         price: 45.99,
@@ -72,7 +65,6 @@ const seedProducts = async () => {
         image: "https://picsum.photos/id/104/300/300",
       },
       {
-        id: "p8",
         title: "Classic Leather Wallet",
         description: "Elegant leather wallet with multiple card slots.",
         price: 25.99,
@@ -80,7 +72,6 @@ const seedProducts = async () => {
         image: "https://dummyjson.com/image/300x300/333300/FFFFFF?text=Wallet",
       },
       {
-        id: "p9",
         title: "Women's Summer Dress",
         description: "Light and breathable floral summer dress.",
         price: 29.99,
@@ -88,7 +79,6 @@ const seedProducts = async () => {
         image: "https://picsum.photos/id/237/300/300",
       },
       {
-        id: "p10",
         title: "Smart Fitness Band",
         description: "Track steps, heart rate, and sleep patterns.",
         price: 39.99,
