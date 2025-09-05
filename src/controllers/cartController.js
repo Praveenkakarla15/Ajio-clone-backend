@@ -1,101 +1,96 @@
 import Cart from "../models/cart.js";
 
-// @desc Get all cart items for logged-in user
+// Get all cart items for logged-in user
 export const getCart = async (req, res) => {
   try {
-    let cart = await Cart.findOne({ user: req.user._id }).populate("items.product");
-    if (!cart) {
-      cart = await Cart.create({ user: req.user._id, items: [] });
-    }
-    res.status(200).json(cart.items);
+    const cart = await Cart.findOne({ user: req.user._id }).populate("items.product");
+    res.json(cart?.items || []);
   } catch (err) {
-    console.error("Error fetching cart:", err);
-    res.status(500).json({ message: "Failed to fetch cart items" });
+    res.status(500).json({ message: "Error fetching cart", error: err.message });
   }
 };
 
-// @desc Add item to cart
+// Add item to cart
 export const addToCart = async (req, res) => {
   try {
-    const { productId, quantity = 1 } = req.body;
-    if (!productId) return res.status(400).json({ message: "Product ID is required" });
-
+    const { productId, quantity } = req.body;
     let cart = await Cart.findOne({ user: req.user._id });
-    if (!cart) cart = await Cart.create({ user: req.user._id, items: [] });
 
-    const existingItem = cart.items.find(item => item.product.toString() === productId);
-    if (existingItem) {
-      existingItem.quantity += quantity;
+    if (!cart) {
+      cart = new Cart({ user: req.user._id, items: [] });
+    }
+
+    // Check if product exists in cart
+    const itemIndex = cart.items.findIndex((item) => item.product.toString() === productId);
+
+    if (itemIndex >= 0) {
+      cart.items[itemIndex].quantity += quantity;
     } else {
       cart.items.push({ product: productId, quantity });
     }
 
     await cart.save();
     await cart.populate("items.product");
-    res.status(200).json(cart.items);
+
+    res.json(cart.items);
   } catch (err) {
-    console.error("Error adding to cart:", err);
-    res.status(500).json({ message: "Failed to add item to cart" });
+    res.status(500).json({ message: "Error adding to cart", error: err.message });
   }
 };
 
-// @desc Update quantity of a cart item
+// Update quantity of a cart item
 export const updateCartQuantity = async (req, res) => {
   try {
+    const { id } = req.params;
     const { quantity } = req.body;
-    const cart = await Cart.findOne({ user: req.user._id });
+
+    let cart = await Cart.findOne({ user: req.user._id });
+
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    const item = cart.items.id(req.params.id); // still using subdocument id for update
-    if (!item) return res.status(404).json({ message: "Cart item not found" });
+    const item = cart.items.id(id); // use subdocument _id
+    if (!item) return res.status(404).json({ message: "Item not found" });
 
-    if (quantity <= 0) {
-      item.remove();
-    } else {
-      item.quantity = quantity;
-    }
-
+    item.quantity = quantity;
     await cart.save();
     await cart.populate("items.product");
-    res.status(200).json(cart.items);
+
+    res.json(cart.items);
   } catch (err) {
-    console.error("Error updating cart quantity:", err);
-    res.status(500).json({ message: "Failed to update cart item" });
+    res.status(500).json({ message: "Error updating cart item", error: err.message });
   }
 };
 
-// @desc Remove item from cart using productId instead of subdocument id
+// Remove single item from cart
 export const removeFromCart = async (req, res) => {
   try {
-    const { id: productId } = req.params; // productId from frontend
-    const cart = await Cart.findOne({ user: req.user._id });
+    const { id } = req.params; // This is the subdocument _id of the cart item
+    let cart = await Cart.findOne({ user: req.user._id });
+
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    // Filter out item based on productId
-    cart.items = cart.items.filter(
-      (item) => item.product.toString() !== productId
-    );
+    // Filter out the item with the given _id
+    cart.items = cart.items.filter((item) => item._id.toString() !== id);
 
     await cart.save();
     await cart.populate("items.product");
-    res.status(200).json(cart.items);
+
+    res.json(cart.items);
   } catch (err) {
-    console.error("Error removing from cart:", err);
-    res.status(500).json({ message: "Failed to remove item from cart" });
+    res.status(500).json({ message: "Error removing cart item", error: err.message });
   }
 };
 
-// @desc Clear all items from cart
+// Clear entire cart
 export const clearCart = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ user: req.user._id });
-    if (!cart) return res.status(404).json({ message: "Cart not found" });
-
-    cart.items = [];
-    await cart.save();
-    res.status(200).json({ message: "All items removed from cart" });
+    let cart = await Cart.findOne({ user: req.user._id });
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+    }
+    res.json([]);
   } catch (err) {
-    console.error("Error clearing cart:", err);
-    res.status(500).json({ message: "Failed to clear cart" });
+    res.status(500).json({ message: "Error clearing cart", error: err.message });
   }
 };
